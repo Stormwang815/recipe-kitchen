@@ -1,0 +1,3 @@
+const fs=require('fs'),path=require('path'),cp=require('child_process');const root=path.join(__dirname,'..');let count=0;
+function walk(dir){for(const ent of fs.readdirSync(dir,{withFileTypes:true})){if(ent.name==='node_modules')continue;const p=path.join(dir,ent.name);if(ent.isDirectory())walk(p);else if(p.endsWith('.js')){cp.execFileSync(process.execPath,['--check',p]);count++;}else if(p.endsWith('.json'))JSON.parse(fs.readFileSync(p,'utf8'));}}walk(root);
+const app=JSON.parse(fs.readFileSync(path.join(root,'miniprogram/app.json')));for(const p of app.pages)for(const ext of ['.js','.json','.wxml','.wxss'])if(!fs.existsSync(path.join(root,'miniprogram',p+ext)))throw Error('缺失页面 '+p+ext);console.log('通过：'+count+' 个 JS 文件语法、JSON 格式与 '+app.pages.length+' 个页面完整性');

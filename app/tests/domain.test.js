@@ -1,0 +1,20 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),d=require('../miniprogram/lib/domain');
+const r=ingredients=>({id:'r',title:'菜',servings:2,version:1,ingredients,steps:[{text:'操作'}]});
+const p=n=>({id:'p',date:'2026-11-19',recipeId:'r',servings:n||2});
+const sum=(recipe,plans=[p()])=>d.shopping(plans,[recipe],'2026-11-19','2026-11-19');
+test('人数缩放与别名',()=>{const x=sum(r([{name:'西红柿',quantity:2,unit:'个'}]),[p(3),p(1)])[0];assert.equal(x.required,4);assert.equal(x.name,'番茄');});
+test('kg 与 g 换算',()=>assert.equal(sum(r([{name:'牛肉',quantity:.5,unit:'kg'},{name:'牛肉',quantity:500,unit:'g'}]))[0].required,1000));
+test('未知用量不当零',()=>{const x=sum(r([{name:'盐',quantity:'',unit:''}]))[0];assert.equal(x.unknown,true);assert.equal(d.purchase(x),null);});
+test('够用标记可覆盖未知',()=>assert.equal(d.purchase({unknown:true,enough:true}),0));
+test('勺和克不合并',()=>assert.equal(sum(r([{name:'盐',quantity:1,unit:'勺'},{name:'盐',quantity:5,unit:'g'}])).length,2));
+test('扣减不为负',()=>assert.equal(d.purchase({required:2,available:5,checked:true}),0));
+test('未核对不计算',()=>assert.equal(d.purchase({required:2,checked:false}),null));
+test('已买项目与手动项不丢失',()=>{const x=d.mergeRefresh([{id:'1',key:'a',bought:true},{id:'2',manual:true}],[]);assert.equal(x.length,2);assert.equal(x[0].removedFromPlan,true);});
+test('计时按截止时间恢复',()=>assert.equal(d.remaining({state:'running',deadline:10000},7500),3));
+test('暂停不流逝',()=>assert.equal(d.remaining({state:'paused',remaining:21},99999),21));
+test('跨年日期',()=>assert.equal(d.addDays('2026-12-31',1),'2027-01-01'));
+test('空食材名称拒绝',()=>assert.throws(()=>d.validateRecipe(r([{name:''}]))));
+test('备份失效引用拒绝',()=>assert.throws(()=>d.validateBackup({schemaVersion:1,recipes:[],plans:[p()],lists:[]})));
+
+test('菜单需求增加后必须重新确认够用状态',()=>{const old=[{id:'a',key:'rice',required:2,unknown:false,checked:true,enough:true,bought:true,assignee:'u',assigneeLabel:'成员 u'}];const next=d.mergeRefresh(old,[{id:'b',key:'rice',required:4,unknown:false}])[0];assert.equal(next.enough,false);assert.equal(next.checked,false);assert.equal(next.bought,true);assert.equal(next.assigneeLabel,'成员 u');});
+test('无效回收站在覆盖数据前拒绝',()=>assert.throws(()=>d.validateBackup({schemaVersion:1,recipes:[],plans:[],lists:[],trash:[null]})));

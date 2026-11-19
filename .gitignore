@@ -1,0 +1,15 @@
+.DS_Store
+node_modules/
+project.private.config.json
+/project.config.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+coverage/
+artifacts/
+*.log
+*.zip

@@ -1,0 +1,1 @@
+Component({data:{selected:0,list:[{path:'/pages/home/index',text:'今日'},{path:'/pages/recipes/index',text:'菜谱'},{path:'/pages/calendar/index',text:'日历'},{path:'/pages/kitchen/index',text:'厨房'}]},methods:{switchTab(e){const i=e.currentTarget.dataset.index;wx.switchTab({url:this.data.list[i].path});}}});

@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/recipes/index",
+    "pages/calendar/index",
+    "pages/kitchen/index",
+    "pages/editor/index",
+    "pages/detail/index",
+    "pages/cook/index",
+    "pages/shopping/index",
+    "pages/import/index",
+    "pages/backup/index",
+    "pages/ai-settings/index",
+    "pages/transcribe/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "好好吃饭",
+    "navigationBarBackgroundColor": "#f6f5f0",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f6f5f0"
+  },
+  "tabBar": {
+    "color": "#8b8c85",
+    "selectedColor": "#315e44",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "今日"
+      },
+      {
+        "pagePath": "pages/recipes/index",
+        "text": "菜谱"
+      },
+      {
+        "pagePath": "pages/calendar/index",
+        "text": "日历"
+      },
+      {
+        "pagePath": "pages/kitchen/index",
+        "text": "厨房"
+      }
+    ],
+    "custom": true
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,7 @@
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const memory=new Map();global.wx={getStorageSync:k=>memory.get(k),setStorageSync:(k,v)=>memory.set(k,structuredClone(v))};
+const settings=require('../miniprogram/lib/ai-settings');const profile=id=>({id,name:'个人服务',baseUrl:'https://api.deepseek.com',model:'model',jsonMode:true});
+test('默认密钥只在内存，配置元数据不含密钥',()=>{memory.clear();settings.save(profile('session'),'test-secret-value',false);assert.equal(settings.current().apiKey,'test-secret-value');assert.equal(JSON.stringify(Array.from(memory.values())).includes('test-secret-value'),false);});
+test('用户明确选择才记住本机密钥，关闭后清除持久密钥',()=>{memory.clear();settings.save(profile('saved'),'remember-secret',true);assert.equal(memory.get('ai-device-keys-v1').saved,'remember-secret');settings.save(profile('saved'),'session-only',false);assert.equal(Object.keys(memory.get('ai-device-keys-v1')).length,0);});
+test('多配置独立切换，删除当前配置清除密钥',()=>{memory.clear();settings.save(profile('a'),'key-a',false);settings.save(profile('b'),'key-b',false);settings.select('a');assert.equal(settings.current().apiKey,'key-a');settings.remove('a');assert.equal(settings.key('a'),'');assert.equal(settings.current(),null);});
+test('空模型和非HTTPS无法保存',()=>{assert.throws(()=>settings.save({...profile('bad'),model:''},'key',false));assert.throws(()=>settings.save({...profile('bad'),baseUrl:'http://unsafe.example'},'key',false));});

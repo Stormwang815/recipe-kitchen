@@ -1,0 +1,14 @@
+{
+  "appid": "wx661fcde759e36eb2",
+  "projectname": "好好吃饭",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "compileType": "miniprogram",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": true
+  }
+}

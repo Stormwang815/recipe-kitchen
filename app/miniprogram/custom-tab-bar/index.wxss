@@ -1,0 +1,1 @@
+.bar{display:flex;background:#fff;padding:15rpx 15rpx calc(15rpx + env(safe-area-inset-bottom));border-top:1rpx solid #eceee5}.tab{flex:1;text-align:center;color:#8b8c85;font-size:26rpx;padding:14rpx;position:relative}.active{color:#315e44;font-weight:600}.dot{height:6rpx;width:6rpx;background:#315e44;border-radius:50%;margin:8rpx auto 0}
